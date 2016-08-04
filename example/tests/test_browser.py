@@ -64,7 +64,7 @@ class BrowserTestBase(object):
         }
         defaults.update(options)
         widget = self.selenium.find_element_by_css_selector('.image-ratio')
-        for attr in defaults.keys():
+        for attr in list(defaults.keys()):
             self.assertEqual(widget.get_attribute(attr), defaults[attr])
 
     def _ensure_thumbnail_rendered(self):

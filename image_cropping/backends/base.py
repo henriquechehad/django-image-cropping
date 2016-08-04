@@ -24,7 +24,7 @@ class ImageBackend(six.with_metaclass(abc.ABCMeta)):
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
-        for k, v in kwargs.items():
+        for k, v in list(kwargs.items()):
             setattr(self, k, v)
 
     @abc.abstractmethod

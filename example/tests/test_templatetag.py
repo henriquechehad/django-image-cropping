@@ -10,7 +10,7 @@ from django.test import TestCase
 from .factory import create_cropped_image
 
 try:
-    from urllib import unquote
+    from urllib.parse import unquote
 except ImportError:  # py3
     from urllib.parse import unquote
 
@@ -30,7 +30,7 @@ class TemplateTagTestBase(object):
 
     def _test_templatetag(self, crop_field, options={}):
         option_str = ' '.join(['%s=%s' % (option, value)
-                               for option, value in options.items()])
+                               for option, value in list(options.items())])
         tmpl = 'cropped_thumbnail image "%s" %s' % (crop_field, option_str)
         tmpl = '{% load cropping %}{% ' + tmpl + ' %}'
         t = Template(tmpl)

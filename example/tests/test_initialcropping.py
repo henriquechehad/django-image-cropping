@@ -40,18 +40,15 @@ class InitialCroppingTestCase(TestCase):
 
     def test_initialcropping(self):
         self.assertEqual(self.image.cropping,
-                         ','.join(map(lambda d: str(d),
-                                      max_cropping(120, 100, self.width, self.height))))
+                         ','.join([str(d) for d in max_cropping(120, 100, self.width, self.height)]))
 
         # free crop
         self.assertEqual(self.image.cropping_free,
-                         ','.join(map(lambda d: str(d),
-                                      max_cropping(120, 100,
-                                                   self.width, self.height, True))))
+                         ','.join([str(d) for d in max_cropping(120, 100,
+                                                   self.width, self.height, True)]))
 
     def test_fk_initialcropping(self):
         image = ImageFK(image=self.image)
         image.save()
         self.assertEqual(image.cropping,
-                         ','.join(map(lambda d: str(d),
-                                      max_cropping(120, 100, self.width, self.height))))
+                         ','.join([str(d) for d in max_cropping(120, 100, self.width, self.height)]))

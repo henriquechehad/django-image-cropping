@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 from django import forms
 from django.db import models
@@ -31,7 +31,7 @@ class ImageRatioField(models.CharField):
                  adapt_rotation=False, allow_fullsize=False, verbose_name=None,
                  help_text=None, hide_image_field=False,
                  size_warning=settings.IMAGE_CROPPING_SIZE_WARNING):
-        if '__' in image_field:
+        if '__' in str(image_field):
             self.image_field, self.image_fk_field = image_field.split('__')
         else:
             self.image_field, self.image_fk_field = image_field, None
@@ -114,7 +114,7 @@ class ImageRatioField(models.CharField):
                 box = max_cropping(ratiofield.width, ratiofield.height,
                                    image.width, image.height,
                                    free_crop=ratiofield.free_crop)
-                box = ','.join(map(lambda i: str(i), box))
+                box = ','.join([str(i) for i in box])
             except IOError:
                 box = ''
             setattr(instance, ratiofieldname, box)
