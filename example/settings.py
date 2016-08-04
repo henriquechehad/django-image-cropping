@@ -1,6 +1,9 @@
+import logging
 import os
 import sys
-import logging
+
+from easy_thumbnails.conf import settings as thumbnail_settings
+
 import django.template
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -60,12 +63,6 @@ INSTALLED_APPS = [
 ]
 
 
-if django.VERSION[:2] < (1, 6):
-    TEST_RUNNER = 'discover_runner.DiscoverRunner'
-else:
-    TEST_RUNNER = 'django.test.runner.DiscoverRunner'
-
-from easy_thumbnails.conf import settings as thumbnail_settings
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
 ) + thumbnail_settings.THUMBNAIL_PROCESSORS

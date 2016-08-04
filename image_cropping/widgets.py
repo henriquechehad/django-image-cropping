@@ -1,50 +1,59 @@
 from __future__ import unicode_literals
+
 import logging
 
 from django import forms
 from django.contrib.admin.templatetags import admin_static
-
-from django.db.models import get_model, ObjectDoesNotExist
 from django.contrib.admin.widgets import AdminFileWidget, ForeignKeyRawIdWidget
-from easy_thumbnails.files import get_thumbnailer
-from easy_thumbnails.source_generators import pil_image
+from django.db.models import ObjectDoesNotExist
+
 from .config import settings
+from .utils import get_backend
+
+try:
+    # Django >= 1.9
+    from django.apps import apps
+    get_model = apps.get_model
+except ImportError:
+    from django.db.models import get_model
 
 logger = logging.getLogger(__name__)
 
 
-def thumbnail(image_path):
-    thumbnailer = get_thumbnailer(image_path)
+def thumbnail_url(image_path):
     thumbnail_options = {
         'detail': True,
         'upscale': True,
         'size': settings.IMAGE_CROPPING_THUMB_SIZE,
     }
-    thumb = thumbnailer.get_thumbnail(thumbnail_options)
-    return thumb
+    return get_backend().get_thumbnail_url(image_path, thumbnail_options)
 
 
 def get_attrs(image, name):
     try:
         # TODO test case
-        # If the image file has already been closed, open it
-        if image.closed:
-            image.open()
+        try:
+            # try to use image as a file
+            # If the image file has already been closed, open it
+            if image.closed:
+                image.open()
 
-        # Seek to the beginning of the file.  This is necessary if the
-        # image has already been read using this file handler
-        image.seek(0)
+            # Seek to the beginning of the file.  This is necessary if the
+            # image has already been read using this file handler
+            image.seek(0)
+        except:
+            pass
 
         try:
             # open image and rotate according to its exif.orientation
-            width, height = pil_image(image).size
+            width, height = get_backend().get_size(image)
         except AttributeError:
             # invalid image -> AttributeError
             width = image.width
             height = image.height
         return {
             'class': "crop-thumb",
-            'data-thumbnail-url': thumbnail(image).url,
+            'data-thumbnail-url': thumbnail_url(image),
             'data-field-name': name,
             'data-org-width': width,
             'data-org-height': height,
@@ -118,7 +127,7 @@ class CropForeignKeyWidget(ForeignKeyRawIdWidget, CropWidget):
                 )
                 if image:
                     attrs.update(get_attrs(image, name))
-            except ObjectDoesNotExist:
+            except (ObjectDoesNotExist, LookupError):
                 logger.error("Can't find object: %s.%s with primary key %s "
                              "for cropping." % (app_name, model_name, value))
             except AttributeError:

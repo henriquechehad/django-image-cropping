@@ -1,7 +1,8 @@
-import re
-import os
 import codecs
-from setuptools import setup, find_packages
+import os
+import re
+
+from setuptools import find_packages, setup
 
 
 def read(*parts):
@@ -28,7 +29,7 @@ setup(
     author_email="jvp@jonasundderwolf.de",
     url="http://github.com/jonasundderwolf/django-image-cropping",
     packages=find_packages(),
-    install_requires=["django-appconf==1.0.1"],
+    install_requires=["django-appconf==1.0.1", "six"],
     include_package_data=True,
     test_suite='example.runtests.runtests',
     classifiers=[
@@ -43,5 +44,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'License :: OSI Approved :: BSD License',
     ],
 )

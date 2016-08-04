@@ -267,6 +267,14 @@ You can point to another version using the ``IMAGE_CROPPING_JQUERY_URL`` setting
 issues may arise if your jQuery version differs from the one that is tested against.
 
 You can also set ``IMAGE_CROPPING_JQUERY_URL`` to ``None`` to disable inclusion of jQuery by the widget.
+You are now responsible for including ``jQuery`` yourself, both in the frontend and in the admin interface.
+
+
+Troubleshooting
+===============
+
+The cropping widget is not displayed when using a ``ForeignKey``.
+    Make sure you do **not** add the corresponding image field to ``raw_id_fields``.
 
 
 Changelog

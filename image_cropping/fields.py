@@ -1,10 +1,12 @@
 from __future__ import unicode_literals
-from django.db import models
+
 from django import forms
+from django.db import models
 from django.db.models import signals
-from .widgets import ImageCropWidget
-from .utils import max_cropping
+
 from .config import settings
+from .utils import max_cropping
+from .widgets import ImageCropWidget
 
 
 class ImageCropField(models.ImageField):
@@ -128,6 +130,7 @@ class ImageRatioField(models.CharField):
             'data-ratio': ratio,
             'data-image-field': self.image_field,
             'data-my-name': self.name,
+            'data-jquery-url': settings.IMAGE_CROPPING_JQUERY_URL,
             'data-adapt-rotation': str(self.adapt_rotation).lower(),
             'data-allow-fullsize': str(self.allow_fullsize).lower(),
             'data-size-warning': str(self.size_warning).lower(),
